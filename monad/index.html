@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monad</title>
+</head>
+
+<body>
+</body>
+<script>
+    // let sine = (x) => Math.sin(x);
+    // let cube = (x) => x * x * x;
+
+    // let sineCubed = (x) => cube(sine(x));
+
+    let compose = (f, g) => (x) => f(g(x));
+    // let sineOfCube = compose(cube, sine);
+
+    // let x = 1.22;
+    // console.log(sineOfCube(x) === sineCubed(x))
+
+    let sine = (x) => [Math.sin(x), 'sine was called.'];
+
+    let cube = (x) => [x * x * x, 'cube was called.'];
+
+    let composeDebuggable = (f, g) => (x) => {
+        const [y, s] = g(x),
+            [z, t] = f(y);
+        return [z, s + t];
+    };
+    // console.log(composeDebuggable(sine, cube)(3))
+
+    let bind = (f) => function (tuple) {
+        const [x, s] = tuple,
+            [y, t] = f(x);
+        return [y, s + t];
+    };
+
+    let f = compose(bind(sine), bind(cube));
+    // console.log(f([3, '']))
+
+    let unit = (x) => [x, ''];
+    // console.log(f(unit(3)))
+
+    console.log(compose(f, unit)(3)) 
+</script>
+
+</html>
